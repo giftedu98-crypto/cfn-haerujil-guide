@@ -19,7 +19,7 @@ window.addEventListener('load',()=>{
     const icon=L.divIcon({
       className:'cfn-marker-wrap',
       html:`<button class="cfn-map-marker" type="button" aria-label="${name} 포인트 열기" onclick="window.CFNOpenPoint('${id}')"><span class="real-pin"></span><b class="point-name">${name}</b></button>`,
-      iconSize:[170,42],iconAnchor:id==='gijang'?[12,-58]:[12,21]
+      iconSize:[170,42],iconAnchor:[12,21]
     });
     L.marker([lat,lng],{icon,keyboard:true}).addTo(map);
   });

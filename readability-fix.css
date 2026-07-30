@@ -1,0 +1,2 @@
+/* 지도 위에서도 앱 제목을 확실하게 읽을 수 있게 합니다. */
+.single-head h1{display:table!important;padding:5px 10px!important;border-radius:8px!important;background:#06364d!important;color:#fff!important;text-shadow:none!important;box-shadow:0 3px 10px #001d2b99!important}

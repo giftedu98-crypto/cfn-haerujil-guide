@@ -3,8 +3,8 @@ window.addEventListener('load',()=>{
   const root=document.querySelector('.mgn-single');
   root.insertAdjacentHTML('afterbegin','<div id="realBusanMap" aria-label="부산 해루질 포인트 지도"></div>');
   const bounds=L.latLngBounds([[34.99,128.88],[35.37,129.35]]);
-  const map=L.map('realBusanMap',{zoomControl:false,attributionControl:false,maxBounds:bounds,maxBoundsViscosity:1,minZoom:10,maxZoom:15});
-  map.fitBounds(bounds,{paddingTopLeft:[10,245],paddingBottomRight:[10,145]});
+  const map=L.map('realBusanMap',{zoomControl:false,attributionControl:false,maxBounds:bounds,maxBoundsViscosity:1,minZoom:9,maxZoom:15});
+  map.fitBounds(bounds,{paddingTopLeft:[10,380],paddingBottomRight:[10,150]});
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(map);
   const spots={
     dadaepo:['다대포',35.0475,128.966],amnam:['암남공원',35.0712,129.015],yeongdo:['영도 흰여울',35.0785,129.044],haeundae:['청사포',35.158,129.191],gijang:['기장 연화리',35.326,129.267]
@@ -23,5 +23,5 @@ window.addEventListener('load',()=>{
     });
     L.marker([lat,lng],{icon,keyboard:true}).addTo(map);
   });
-  setTimeout(()=>map.invalidateSize(),250);
+  setTimeout(()=>{map.invalidateSize();map.fitBounds(bounds,{paddingTopLeft:[10,380],paddingBottomRight:[10,150]});},700);
 });

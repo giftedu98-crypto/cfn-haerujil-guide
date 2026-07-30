@@ -4,6 +4,8 @@
   };
   const header=document.querySelector('.single-head');
   header.insertAdjacentHTML('beforeend','<section class="prime-tide" aria-label="오늘의 해루질 적정 시간"><span>오늘의 해루질 적정 시간</span><strong id="primeTime">18:50 — 22:20</strong><small id="primeDetail">다대포 · 썰물 20:42 전후</small></section>');
+  header.insertAdjacentHTML('beforeend','<button class="safety-banner" id="safetyBanner" type="button">🦺 안전수칙 보기</button>');
+  document.querySelector('#safetyBanner').onclick=()=>document.querySelector('#manualSafety').click();
   document.querySelector('.mgn-single').insertAdjacentHTML('beforeend','<button class="emergency-fab" id="emergencyFab" aria-label="긴급 신고 및 위치 공유"><span>✚</span><b>긴급<br>신고</b></button><div class="single-modal" id="emergencyModal"><div class="dialog emergency-dialog"><button class="dialog-close" id="emergencyX" aria-label="닫기">×</button><div class="safety-icon">🛟</div><p class="sheet-kicker">EMERGENCY</p><h2>긴급 신고</h2><p>위험하거나 귀환이 어려우면 즉시 119에 연락하세요. 현재 위치를 함께 전달하면 구조에 도움이 됩니다.</p><a class="call-119" href="tel:119">119에 전화하기</a><button class="share-location" id="shareLocation">현재 위치 공유하기</button><p class="location-status" id="locationStatus">위치 공유는 사용자의 허용 후에만 실행됩니다.</p><div class="safety-note">파도·밀물·고립 위험이 있으면 장비를 챙기려 하지 말고 높은 곳으로 이동하세요.</div></div></div>');
   const primeTime=document.querySelector('#primeTime'),primeDetail=document.querySelector('#primeDetail');
   document.querySelectorAll('[data-p]').forEach(pin=>pin.addEventListener('click',()=>{const p=schedule[pin.dataset.p];if(!p)return;primeTime.textContent=p[1];primeDetail.textContent=`${p[0]} · 썰물 ${p[2]} 전후`;},{capture:true}));

@@ -15,7 +15,9 @@ window.addEventListener('load',()=>{
     hiddenPin.click();
   };
   window.CFNOpenPoint=openPoint;
+  root.insertAdjacentHTML('beforeend','<button class="gijang-fixed-point" type="button" aria-label="기장 연화리 포인트 열기" onclick="window.CFNOpenPoint(\'gijang\')"><span class="real-pin"></span><b>기장 연화리</b></button>');
   Object.entries(spots).forEach(([id,[name,lat,lng]])=>{
+    if(id==='gijang')return;
     const icon=L.divIcon({
       className:'cfn-marker-wrap',
       html:`<button class="cfn-map-marker" type="button" aria-label="${name} 포인트 열기" onclick="window.CFNOpenPoint('${id}')"><span class="real-pin"></span><b class="point-name">${name}</b></button>`,

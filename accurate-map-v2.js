@@ -4,7 +4,7 @@ window.addEventListener('load',()=>{
   root.insertAdjacentHTML('afterbegin','<div id="realBusanMap" aria-label="부산 해루질 포인트 지도"></div>');
   const bounds=L.latLngBounds([[34.99,128.88],[35.37,129.35]]);
   const map=L.map('realBusanMap',{zoomControl:false,attributionControl:false,maxBounds:bounds,maxBoundsViscosity:1,minZoom:10,maxZoom:15});
-  map.fitBounds(bounds,{paddingTopLeft:[10,190],paddingBottomRight:[10,12]});
+  map.fitBounds(bounds,{paddingTopLeft:[10,245],paddingBottomRight:[10,145]});
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(map);
   const spots={
     dadaepo:['다대포',35.0475,128.966],amnam:['암남공원',35.0712,129.015],yeongdo:['영도 흰여울',35.0785,129.044],haeundae:['청사포',35.158,129.191],gijang:['기장 연화리',35.326,129.267]
@@ -19,7 +19,7 @@ window.addEventListener('load',()=>{
     const icon=L.divIcon({
       className:'cfn-marker-wrap',
       html:`<button class="cfn-map-marker" type="button" aria-label="${name} 포인트 열기" onclick="window.CFNOpenPoint('${id}')"><span class="real-pin"></span><b class="point-name">${name}</b></button>`,
-      iconSize:[150,34],iconAnchor:id==='gijang'?[12,-58]:[12,17]
+      iconSize:[170,42],iconAnchor:[12,21]
     });
     L.marker([lat,lng],{icon,keyboard:true}).addTo(map);
   });

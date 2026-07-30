@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#061f34" />
+  <title>MGN | 해루질 길잡이</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Gowun+Dodum&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="mgn-app.css" />
+  <link rel="stylesheet" href="mgn-single.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="accurate-map.css" />
+  <link rel="stylesheet" href="accurate-map-v2.css" />
+  <link rel="stylesheet" href="cfn-emergency.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="MGN 해루질 길잡이 홈"><span class="brand-mark">⌁</span><span><b>MGN</b><small>해루질 길잡이</small></span></a>
+      <div class="today"><span class="live-dot"></span><span id="todayText">2026. 07. 30 · 부산</span></div>
+      <button class="icon-button" id="helpButton" aria-label="안내 보기">?</button>
+    </header>
+
+    <section class="hero" id="top">
+      <p class="eyebrow">MUD GATHERING NOTIFIER · BUSAN</p>
+      <h1>오늘, 바다가<br><em>열리는 시간.</em></h1>
+      <p class="hero-copy">부산 바다의 물때를 보고<br>내게 맞는 해루질 시간을 찾아보세요.</p>
+      <div class="tide-summary">
+        <div><span>다음 썰물</span><strong id="nextLow">20:42</strong><small id="nextLowDetail">− 1시간 18분</small></div>
+        <div class="tide-line"><span></span></div>
+        <div><span>다음 밀물</span><strong id="nextHigh">03:12</strong><small>+ 5시간 48분</small></div>
+      </div>
+    </section>
+
+    <section class="map-section" aria-labelledby="mapTitle">
+      <div class="section-heading"><div><p class="eyebrow">EXPLORE</p><h2 id="mapTitle">부산의 바다 포인트</h2></div><span class="point-count">5 POINTS</span></div>
+      <div class="map-card" id="mapCard" aria-label="부산 연안 포인트 지도">
+        <svg class="busan-map" viewBox="0 0 680 390" role="img" aria-label="부산 서부 다대포부터 동부 기장까지의 해안 지도"><path class="land" d="M-20 0H216c14 15 10 28 31 38 19 8 44 2 57 17 13 15 1 27 23 38 25 13 60 1 82 17 26 18 12 38 45 48 31 10 46-7 76 3 30 11 26 34 60 43 29 8 67-8 110 7v214H-20z"/><path class="coast" d="M-7 25c52 5 117-2 167 0 24 1 25 15 54 21 36 8 63-1 91 11 29 13 11 28 42 43 30 15 54-2 86 16 32 19 10 39 52 52 35 11 58-7 88 8 27 14 30 37 65 46 25 6 53-4 92 3"/><path class="route" d="M57 266C150 241 210 230 294 226c109-5 142-58 269-70 51-5 77-18 118-39"/></svg>
+        <div class="map-water"></div><div class="map-grid"></div>
+        <div class="map-label label-west">낙동강</div><div class="map-label label-east">기장군</div><div class="map-label label-south">영도구</div><div class="map-label label-city">부산광역시</div>
+        <button class="map-point selected" style="left:23%; top:61%" data-id="dadaepo"><span></span><b>다대포</b></button>
+        <button class="map-point" style="left:43%; top:49%" data-id="amnam"><span></span><b>암남공원</b></button>
+        <button class="map-point" style="left:58%; top:62%" data-id="yeongdo"><span></span><b>영도 흰여울</b></button>
+        <button class="map-point" style="left:69%; top:42%" data-id="haeundae"><span></span><b>해운대 청사포</b></button>
+        <button class="map-point" style="left:83%; top:28%" data-id="gijang"><span></span><b>기장 연화리</b></button>
+        <div class="map-popup" id="mapPopup"><span class="popup-kicker">선택한 포인트</span><strong id="popupName">다대포 해수욕장</strong><p><b id="popupLow">20:42</b> 썰물 · <span id="popupWindow">18:50 — 22:20</span> 추천</p><button id="popupDetail">상세 보기 <span>↓</span></button></div><div class="map-compass">N<br><i>✦</i></div><div class="map-scale">━ 2 km</div>
+      </div>
+      <p class="map-caption">포인트를 눌러 오늘의 물때와 생물을 확인하세요.</p>
+    </section>
+
+    <section class="detail-section" id="pointDetail">
+      <div class="section-heading"><div><p class="eyebrow">SELECTED POINT</p><h2 id="pointName">다대포 해수욕장</h2></div><span class="tag" id="pointType">모래 · 갯벌</span></div>
+      <div class="condition-card"><div class="condition-top"><span class="status-dot"></span><strong id="conditionText">해루질 추천</strong><span id="conditionTime">18:50 — 22:20</span></div><p id="conditionDesc">썰물 전후 2시간, 얕은 갯벌이 드러나는 시간이에요.</p><div class="tide-chart" aria-label="조석 그래프"><svg viewBox="0 0 600 100" preserveAspectRatio="none"><path d="M0 18 C50 16,70 84,140 76 S205 8,270 20 S340 88,410 74 S485 4,550 18 S580 45,600 40" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M0 100 L0 18 C50 16,70 84,140 76 S205 8,270 20 S340 88,410 74 S485 4,550 18 S580 45,600 40 L600 100Z" fill="currentColor" opacity=".1"/></svg><div class="chart-times"><span>12시</span><span>18시</span><span>24시</span><span>06시</span></div></div></div>
+      <div class="tide-times"><div><span>▲ 밀물</span><strong id="highTide">03:12</strong><small>2.1 m</small></div><div><span>▼ 썰물</span><strong id="lowTide">20:42</strong><small>0.3 m</small></div><button id="alertButton"><span>♧</span> 물때 알림</button></div>
+    </section>
+
+    <section class="species-section"><div class="section-heading"><div><p class="eyebrow">LIVING HERE</p><h2>이곳에서 만날 수 있어요</h2></div><span class="reg-badge">규정 확인 필수</span></div><div class="species-list" id="speciesList"></div></section>
+
+    <section class="scanner" id="scanner"><div class="scanner-text"><p class="eyebrow">AI SEA LIFE FINDER</p><h2>무엇을 발견했나요?</h2><p>사진 한 장으로 해양생물을 확인하고,<br>채취 전 꼭 알아야 할 규정도 살펴보세요.</p></div><label class="scan-button" for="photoInput">사진으로 알아보기 <span>↗</span></label><input id="photoInput" type="file" accept="image/*" capture="environment" hidden></section>
+
+    <footer><span>MGN · 해루질 길잡이</span><p>안전한 바다 활동을 위한 안내 서비스</p></footer>
+  </main>
+
+  <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-panel"><button class="close" id="closeModal" aria-label="닫기">×</button><div id="modalContent"></div></div></div>
+  <div class="toast hidden" id="toast"></div>
+  <script src="mgn-app.js"></script>
+  <script src="mgn-single-v2.js"></script>
+  <script src="mgn-enhance.js"></script>
+  <script src="marine-ai-v2.js"></script>
+  <script src="species-regulations-final.js"></script>
+  <script src="cfn-name-fix.js"></script>
+  <script src="cfn-safety-v2.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="accurate-map-v2.js"></script>
+  <script src="manual-safety-close-fix.js"></script>
+  <script src="cfn-emergency.js"></script>
+</body>
+</html>

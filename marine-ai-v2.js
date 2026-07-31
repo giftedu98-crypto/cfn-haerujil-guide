@@ -97,7 +97,7 @@
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function resultCard(best,photo,ranked){
     const [name,,reference,description,min,season]=best;
-    const shown=reference||photo;
+    const shown=photo;
     const score=Math.round((ranked[0]?.score||0)*100);
     return `<p class="sheet-kicker">FREE PHOTO MATCH · BUSAN COAST</p><h2>${escape(name)}</h2><img class="ai-preview" src="${shown}" alt="${escape(name)} 사진"><p class="analysis-badge">가장 가능성이 높은 대상 · 사진 유사도 ${score}% · 부산 연안 후보 ${candidates.length}종 비교</p><p>${escape(description)}</p><div class="reg-grid"><div><span>금지체장</span><b>${escape(min)}</b></div><div><span>금어기</span><b>${escape(season)}</b></div></div><p class="safety-note">다른 후보: ${ranked.slice(1,3).map(x=>escape(candidates[x.index][0])).join(' · ')||'없음'}<br>유사도는 정답 보증이 아닙니다. 보호종·위험 생물 또는 불확실한 경우 채취하지 마세요.</p><div class="analysis-feedback"><strong>도움이 됐나요?</strong><button type="button" data-feedback="yes">Yes</button><button type="button" data-feedback="no">No</button><small id="feedbackStatus"></small></div>`;
   }

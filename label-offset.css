@@ -1,1 +1,2 @@
-.point-name{transform:translateY(var(--label-shift,0px));transition:transform .18s ease}
+.point-name{max-width:94px!important;white-space:normal!important;line-height:1.18!important;transform:translateY(var(--label-shift,0px))!important;transition:transform .18s ease!important}
+@media(max-width:640px){.point-name{max-width:76px!important;font-size:11px!important}}

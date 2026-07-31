@@ -10,8 +10,8 @@
     const wind=Number(now.wind_speed_10m||0),rain=Number(now.precipitation||0),wave=Number(sea.wave_height||0),code=Number(now.weather_code||0);
     const risky=rain>=0.5||wind>=10||wave>=1||code>=80;
     const caution=!risky&&(rain>0||wind>=7||wave>=0.6||code>=61);
-    if(risky){spot.textContent='오늘은 해루질 자제를 권장해요';reason.textContent=`비 ${rain.toFixed(1)} mm · 바람 ${wind.toFixed(1)} km/h · 파고 ${wave.toFixed(1)} m — 현장 통제·특보를 우선 확인하세요.`;return;}
-    spot.textContent=caution?'오늘의 추천: 다대포 (주의)':'오늘의 추천: 다대포';
+    if(risky){spot.textContent='오늘 가도 될까요? 자제 권장';reason.textContent=`비 ${rain.toFixed(1)} mm · 바람 ${wind.toFixed(1)} km/h · 파고 ${wave.toFixed(1)} m — 현장 통제·특보를 우선 확인하세요.`;return;}
+    spot.textContent=caution?'오늘 가도 될까요? 주의 필요 · 다대포':'오늘 가도 될까요? 추천 · 다대포';
     reason.textContent=`비 ${rain.toFixed(1)} mm · 바람 ${wind.toFixed(1)} km/h · 파고 ${wave.toFixed(1)} m — 물때와 출입 통제를 확인한 뒤 이용하세요.`;
   }).catch(()=>{spot.textContent='날씨 정보를 불러오지 못했어요';reason.textContent='인터넷 연결 후 다시 열면 오늘의 추천 포인트를 안내합니다.';});
 })();

@@ -91,7 +91,7 @@
     if(groups.seaweed.includes(name))return '부산 연안의 암반에 붙어 자라는 해조류예요. 채취 해역의 위생 상태와 지역 규정을 확인하세요.';
     return '부산 바다에서 관찰되는 해양생물이에요. 사진 분석 결과만으로는 정확한 종과 식용 여부를 확정할 수 없습니다.';
   };
-  root.insertAdjacentHTML('beforeend','<div class="single-modal" id="dexDetailModal"><div class="dialog dex-detail-dialog"><button class="dialog-close" id="dexDetailX" aria-label="도감 상세 닫기">×</button><p class="sheet-kicker">REGISTERED MARINE DEX</p><h2 id="dexDetailName"></h2><img class="dex-detail-photo" id="dexDetailPhoto" alt="등록한 해양생물 사진"><h3>생물 설명</h3><p id="dexDetailDescription"></p><div class="dex-reg-grid" id="dexDetailRules"></div><div class="dex-recipe" id="dexDetailRecipe"></div></div></div>');
+  root.insertAdjacentHTML('beforeend','<div class="single-modal" id="dexDetailModal"><div class="dialog dex-detail-dialog"><button class="dialog-close" id="dexDetailX" aria-label="도감 상세 닫기">×</button><p class="sheet-kicker">REGISTERED MARINE DEX</p><h2 id="dexDetailName"></h2><img class="dex-detail-photo" id="dexDetailPhoto" alt="등록한 해양생물 사진"><h3>생물 설명</h3><p id="dexDetailDescription"></p><section class="dex-regulations"><h3>채취 규정</h3><div class="dex-reg-grid" id="dexDetailRules"></div></section><div class="dex-recipe" id="dexDetailRecipe"></div></div></div>');
   const detail=document.querySelector('#dexDetailModal');
   const enrich=()=>list.querySelectorAll('.album-item.registered').forEach(item=>{item.dataset.dexDetail=canonical(item.querySelector('b')?.textContent?.trim());item.setAttribute('tabindex','0');item.setAttribute('role','button');item.setAttribute('aria-label',item.dataset.dexDetail+' 도감 상세 보기')});
   const openDetail=item=>{

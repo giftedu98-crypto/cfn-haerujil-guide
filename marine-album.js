@@ -13,6 +13,7 @@
   document.querySelector('#albumFab').onclick=async()=>{await render();modal.classList.add('show')};
   document.querySelector('#albumX').onclick=()=>modal.classList.remove('show');
   document.addEventListener('change',event=>{if(['singlePhoto','cameraPhoto','filePhoto'].includes(event.target.id)&&event.target.files?.[0])pendingFile=event.target.files[0]},true);
+  document.addEventListener('cfn-photo-picked',event=>{if(event.detail?.file)pendingFile=event.detail.file});
   const addSaveButton=()=>{
     if(!pendingFile||bioText.querySelector('.album-save'))return;
     if(!bioText.textContent.includes('FREE PHOTO MATCH'))return;

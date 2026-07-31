@@ -16,6 +16,7 @@
     sheet.innerHTML='<button class="sheet-close" id="sheetX" aria-label="포인트 정보 닫기">×</button><p class="sheet-kicker">SELECTED POINT</p><h2>'+point.name+'</h2><p class="sheet-desc">'+point.desc+'</p><div class="time-cards"><div><span>▲ 밀물</span><b>'+point.high+'</b></div><div><span>▼ 썰물</span><b>'+point.low+'</b></div><div class="best"><span>해루질 적정 시간</span><b>'+point.best+'</b></div></div><h3 class="species-heading">이곳에서 만날 수 있는 생물</h3><div class="species-chips">'+point.species.map(name=>'<button type="button" data-life="'+name+'">'+name+' ›</button>').join('')+'</div>';
     sheet.classList.add('show');
     document.querySelector('#sheetX').onclick=()=>sheet.classList.remove('show');
+    document.dispatchEvent(new CustomEvent('cfn:point-opened',{detail:{id,name:point.name}}));
     requestAnimationFrame(()=>{opening=false;});
   };
   document.addEventListener('click',event=>{
@@ -28,4 +29,3 @@
   window.CFNOpenPointStable=open;
   window.CFNOpenPoint=open;
 })();
-

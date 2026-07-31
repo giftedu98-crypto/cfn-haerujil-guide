@@ -16,6 +16,7 @@
   const list=document.querySelector('#albumList'),modal=document.querySelector('#albumModal'),viewer=document.querySelector('#albumPhotoModal'),deleteModal=document.querySelector('#albumDeleteModal');
   const catalogue=['전복','소라','고둥','바지락','맛조개','낙지','문어','꽃게','망둥어','해삼','성게','멍게','주꾸미','꼴뚜기류','가리비','새조개','가무락조개','개조개','개량조개','비단조개','모시조개','재첩','대수리','피뿔고둥','박하지','풀게','민꽃게','털게','새우류','대하','보리새우','광어','도다리','숭어','노래미','망상어','학공치','전어','미더덕','파래','청각','다시마','오징어류','갑오징어류','굴','홍합','피조개','새꼬막','동죽','백합','키조개','골뱅이','돌게','칠게','짱뚱어','베도라치','우럭','미역','톳'];
   const catalogueName=raw=>({망둑어:'망둥어',성게류:'성게',해삼류:'해삼',꽃게류:'꽃게',바지락조개:'바지락',참소라:'소라',문어류:'문어',오징어:'오징어류',살오징어:'오징어류',한치:'오징어류',갑오징어:'갑오징어류',꼴뚜기:'꼴뚜기류'}[normalizedName(raw)]||normalizedName(raw));
+  const nonDexReason={상어류:'해루질 대상이 아닌 대형 해양 어류이며, 안전을 위해 접근·채취하지 않기 때문이에요.',가오리류:'꼬리 가시에 다칠 수 있어 해루질 도감의 등록 대상이 아니에요.',해파리류:'쏘임 위험이 있어 채취·접촉을 피해야 하는 생물이에요.',복어류:'독성 위험이 있어 채취·섭취 대상으로 등록하지 않아요.',쏨뱅이:'독가시 위험이 있어 해루질 도감의 등록 대상이 아니에요.',해마:'보호가 필요한 생물일 수 있어 채취 대상 도감에 등록하지 않아요.'};
   const render=async()=>{
     const all=(await entries()).sort((a,b)=>b.savedAt-a.savedAt),groups=new Map();
     all.forEach(item=>{const name=normalizedName(item.name),group=groups.get(name)||{name,items:[]};group.items.push(item);groups.set(name,group)});
@@ -52,7 +53,7 @@
     if(!pendingFile||bioText.querySelector('.album-save,.dex-not-listed'))return;
     if(!bioText.textContent.includes('FREE PHOTO MATCH')||!bioText.querySelector('.analysis-badge'))return;
     const name=bioText.querySelector('h2')?.textContent?.trim(),species=catalogueName(name);if(!name)return;
-    if(!catalogue.includes(species)){bioText.insertAdjacentHTML('beforeend','<p class="dex-not-listed"><b>도감 등록 대상이 아니에요.</b><br><span>'+escape(species)+'</span>은(는) 부산 해루질 59종 목록에 포함되지 않았어요. 이 도감은 해루질 대상 생물만 기록하며, 위험·보호 대상 또는 채취 대상이 아닌 생물은 등록하지 않습니다.</p>');return;}
+    if(!catalogue.includes(species)){const reason=nonDexReason[species]||'부산 바다 해루질 대상 59종 목록에 포함되지 않은 생물이에요. 이 도감은 채취 대상 생물만 기록합니다.';bioText.insertAdjacentHTML('beforeend','<p class="dex-not-listed"><b>도감 등록이 불가능해요.</b><br><span>'+escape(species)+'</span> · '+escape(reason)+'</p>');return;}
     bioText.insertAdjacentHTML('beforeend','<button type="button" class="album-save" id="albumSave">📚 이 결과를 도감에 등록</button><small class="album-save-status" id="albumSaveStatus"></small>');
     document.querySelector('#albumSave').onclick=async event=>{event.currentTarget.disabled=true;const first=!(await discoveries()).some(item=>item.name===species);await save({name:species,photo:pendingFile,savedAt:Date.now()});await markDiscovered(species);document.querySelector('#albumSaveStatus').textContent='내 해양생물 도감에 등록했어요.';if(first){document.querySelector('#dexCelebrateName').textContent=species;document.querySelector('#dexCelebrateModal').classList.add('show')}};
   };

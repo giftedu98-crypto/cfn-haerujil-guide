@@ -1,1 +1,1 @@
-.mgn-splash:not(.out)~.mgn-app .camera-fab,.mgn-splash:not(.out)~.mgn-app .safety-fab,.mgn-splash:not(.out)~.mgn-app .prep-fab,.mgn-splash:not(.out)~.mgn-app .emergency-fab{opacity:0!important;pointer-events:none!important}
+.mgn-splash:not(.out)~.mgn-app .camera-fab,.mgn-splash:not(.out)~.mgn-app .safety-fab,.mgn-splash:not(.out)~.mgn-app .prep-fab,.mgn-splash:not(.out)~.mgn-app .emergency-fab,.mgn-splash:not(.out)~.mgn-app .album-fab{opacity:0!important;pointer-events:none!important}

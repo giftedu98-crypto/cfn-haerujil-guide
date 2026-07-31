@@ -48,7 +48,7 @@
     ['파래','a green seaweed algae','', '갯벌과 암반에 붙어 자라는 녹조류입니다.','종별 상이','종별 상이'],
     ['청각','a green seaweed algae','', '가느다란 가지 모양의 녹조류입니다.','종별 상이','종별 상이'],
     ['다시마','a kelp brown seaweed','', '넓고 긴 잎을 가진 갈조류입니다.','종별 상이','종별 상이'],
-    ['상어류','a shark','', '해루질 대상이 아닌 대형 해양 어류입니다. 가까이 가지 말고 즉시 안전한 거리로 이동하세요.','채취하지 마세요','종별 상이'],
+    ['상어류','a shark fish with a dorsal fin','', '해루질 대상이 아닌 대형 해양 어류입니다. 가까이 가지 말고 즉시 안전한 거리로 이동하세요.','채취하지 마세요','종별 상이'],
     ['가오리류','a stingray ray fish','', '꼬리 가시에 다칠 수 있는 어류입니다. 밟지 말고 접근하지 마세요.','채취하지 마세요','종별 상이'],
     ['해파리류','a jellyfish','', '쏘임 위험이 있는 자포동물입니다. 맨손으로 만지지 마세요.','채취하지 마세요','종별 상이'],
     ['오징어류','a squid','', '빠르게 헤엄치는 두족류입니다.','종별 상이','종별 상이'],
@@ -95,10 +95,11 @@
     return classifier;
   }
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function resultCard(best,photo,ranked){
+  const nonDexNames=new Set(['상어류','가오리류','해파리류','소라게','갯지렁이류','따개비','농게','쏨뱅이','복어류','해마','불가사리','삿갓조개','군소']);
+  function resultCard(best,photo,ranked,selected=ranked[0]){
     const [name,,reference,description,min,season]=best;
     const shown=photo;
-    const score=Math.round((ranked[0]?.score||0)*100);
+    const score=Math.round((selected?.score||0)*100);
     return `<p class="sheet-kicker">FREE PHOTO MATCH · BUSAN COAST</p><h2>${escape(name)}</h2><img class="ai-preview" src="${shown}" alt="${escape(name)} 사진"><p class="analysis-badge">가장 가능성이 높은 대상 · 사진 유사도 ${score}% · 부산 연안 후보 ${candidates.length}종 비교</p><p>${escape(description)}</p><div class="reg-grid"><div><span>금지체장</span><b>${escape(min)}</b></div><div><span>금어기</span><b>${escape(season)}</b></div></div><p class="safety-note">다른 후보: ${ranked.slice(1,3).map(x=>escape(candidates[x.index][0])).join(' · ')||'없음'}<br>유사도는 정답 보증이 아닙니다. 보호종·위험 생물 또는 불확실한 경우 채취하지 마세요.</p><div class="analysis-feedback"><strong>도움이 됐나요?</strong><button type="button" data-feedback="yes">Yes</button><button type="button" data-feedback="no">No</button><small id="feedbackStatus"></small></div>`;
   }
   document.querySelector('#singlePhoto').onchange=async e=>{
@@ -116,7 +117,9 @@
       const output=await model(photo,candidates.map(x=>x[1]));
       const ranked=output.map(x=>({index:candidates.findIndex(c=>c[1]===x.label),score:x.score})).filter(x=>x.index>=0).sort((a,b)=>b.score-a.score);
       if(!ranked.length)throw Error('사진 후보를 비교하지 못했습니다.');
-      box.innerHTML=resultCard(candidates[ranked[0].index],photo,ranked);
+      const top=ranked[0],outside=ranked.find(item=>nonDexNames.has(candidates[item.index][0]));
+      const selected=outside&&outside.score>=top.score*.9?outside:top;
+      box.innerHTML=resultCard(candidates[selected.index],photo,ranked,selected);
     }catch(err){
       box.innerHTML='<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>무료 후보 모델을 불러오지 못했습니다</h2><img class="ai-preview" src="'+photo+'" alt="촬영 사진"><p>인터넷 연결을 확인한 뒤 다시 시도해 주세요. 첫 실행에는 모델 다운로드가 필요합니다.</p><p class="safety-note">오류: '+escape(err.message||'알 수 없음')+'</p>';
     }finally{isAnalyzing=false;}

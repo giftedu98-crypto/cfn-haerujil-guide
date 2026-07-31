@@ -9,8 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Gowun+Dodum&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="overrides.css" />
   <link rel="stylesheet" href="mgn-app.css" />
+  <link rel="stylesheet" href="dashboard.css" />
   <link rel="stylesheet" href="mgn-single.css" />
+  <link rel="stylesheet" href="point-fix.css" />
+  <link rel="stylesheet" href="custom-map.css" />
+  <link rel="stylesheet" href="coast-v2.css" />
+  <link rel="stylesheet" href="map-review-v3.css" />
   <link rel="stylesheet" href="cfn-safety.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="accurate-map.css" />
@@ -27,8 +33,8 @@
   <link rel="stylesheet" href="action-icons-uniform.css?v=20260731-1" />
   <link rel="stylesheet" href="route-return-guide.css?v=20260731-1" />
   <link rel="stylesheet" href="photo-source-choice.css?v=20260731-1" />
-  <link rel="stylesheet" href="marine-album.css?v=20260731-1" />
-  <link rel="stylesheet" href="album-recipe.css?v=20260731-1" />
+  <link rel="stylesheet" href="marine-album.css?v=20260731-2" />
+  <link rel="stylesheet" href="album-recipe.css?v=20260731-2" />
   <link rel="stylesheet" href="route-camera-fix.css?v=20260731-1" />
   <link rel="stylesheet" href="point-recommendation.css?v=20260731-1" />
   <link rel="stylesheet" href="return-timer-desktop.css?v=20260731-1" />
@@ -84,10 +90,14 @@
 
   <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-panel"><button class="close" id="closeModal" aria-label="닫기">×</button><div id="modalContent"></div></div></div>
   <div class="toast hidden" id="toast"></div>
+  <script src="app.js"></script>
+  <script src="map-ui.js"></script>
   <script src="mgn-app.js"></script>
+  <script src="dashboard.js"></script>
   <script src="mgn-single-v2.js"></script>
   <script src="mgn-enhance.js"></script>
-  <script src="marine-ai-v2.js"></script>
+  <script src="name-fix.js"></script>
+  <script src="marine-ai-v2.js?v=20260731-2"></script>
   <script src="feedback-remove.js?v=20260731-1"></script>
   <script src="species-regulations-final.js"></script>
   <script src="cfn-name-fix.js"></script>
@@ -102,11 +112,12 @@
   <script src="route-return-guide.js?v=20260731-1"></script>
   <script src="fixed-route-start.js?v=20260731-1"></script>
   <script src="photo-source-choice.js?v=20260731-1"></script>
-  <script src="marine-album.js?v=20260731-1"></script>
-  <script src="album-recipe.js?v=20260731-1"></script>
+  <script src="marine-album.js?v=20260731-2"></script>
+  <script src="album-recipe.js?v=20260731-4"></script>
   <script src="point-recommendation.js?v=20260731-1"></script>
   <script src="safety-copy-cleanup.js?v=20260730-1"></script>
   <script src="safety-prep.js?v=20260731-1"></script>
   <script src="mobile-layout-fix.js?v=20260731-1"></script>
 </body>
 </html>
+

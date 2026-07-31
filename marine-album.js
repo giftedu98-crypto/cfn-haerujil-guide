@@ -38,7 +38,7 @@
   };
   const removeWithConfirm=async id=>{
     const item=(await entries()).find(entry=>Number(entry.id)===Number(id));if(!item)return;
-    if(!window.confirm('선택한 '+normalizedName(item.name)+' 사진을 사진첩에서 삭제할까요?'))return;
+    if(!window.confirm('선택한 '+normalizedName(item.name)+' 사진을 도감에서 삭제할까요?'))return;
     if(catalogue.includes(normalizedName(item.name)))await markDiscovered(normalizedName(item.name));await remove(item.id);deleteModal.classList.remove('show');await render();
   };
   document.querySelector('#albumFab').onclick=async()=>{await render();modal.classList.add('show')};

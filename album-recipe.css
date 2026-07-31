@@ -4,3 +4,5 @@
 
 
 .dex-entry.registered{cursor:pointer}.dex-detail-dialog h2{padding-right:38px}.dex-detail-dialog h3{margin:17px 0 5px;color:#087975;font:900 13px 'Gowun Dodum'}.dex-detail-photo{display:block;width:100%;max-height:220px;object-fit:cover;border-radius:11px;margin:13px 0 0;background:#e7f2ef}.dex-recipe{margin-top:13px;padding:11px 12px;border-radius:10px;background:#edf7f4}.dex-recipe h3{margin-top:0}.dex-recipe p{margin:0!important;color:#254f5b!important;font-size:12px!important}
+
+.dex-reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dex-reg-grid div{padding:9px;border-radius:8px;background:#fff}.dex-reg-grid span{display:block;color:#47716f;font:800 9px 'Gowun Dodum'}.dex-reg-grid b{display:block;margin-top:4px;color:#075b56;font:900 13px 'Gowun Dodum'}

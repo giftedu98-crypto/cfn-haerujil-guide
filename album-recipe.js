@@ -82,7 +82,7 @@
   };
   const list=document.querySelector('#albumList');if(!list)return;
   const enrich=()=>list.querySelectorAll('.album-item').forEach(item=>{
-    if(item.querySelector('.album-recipe'))return;
+    if(!item.classList.contains('registered')||item.querySelector('.album-recipe'))return;
     const raw=item.querySelector('b')?.textContent?.trim(),name=canonical(raw);
     const recipe=recipes[name]||'조리법을 제공하지 않아요 · 식용 여부가 확인되지 않은 후보는 채취·섭취하지 마세요.';
     const edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요');

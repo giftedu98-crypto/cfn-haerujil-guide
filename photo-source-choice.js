@@ -1,13 +1,14 @@
 (() => {
-  const fab=document.querySelector('.camera-fab'),root=document.querySelector('.mgn-single');
-  if(!fab||!root)return;
-  root.insertAdjacentHTML('beforeend','<div class="single-modal" id="photoSourceModal"><div class="dialog photo-source-dialog"><button class="dialog-close" id="photoSourceX" aria-label="닫기">×</button><div class="safety-icon">📷</div><p class="sheet-kicker">PHOTO ANALYSIS</p><h2>사진 가져오기</h2><p>생물이 잘 보이도록 밝고 가까운 사진을 선택하세요.</p><div class="photo-source-actions"><label for="cameraPhoto">📸 카메라로 촬영</label><label for="filePhoto">🖼️ 파일에서 선택</label></div><input id="cameraPhoto" type="file" accept="image/*" capture="environment" hidden><input id="filePhoto" type="file" accept="image/*" hidden></div></div>');
-  const modal=document.querySelector('#photoSourceModal'),close=()=>modal.classList.remove('show');
+  const fab=document.querySelector('.camera-fab'),root=document.querySelector('.mgn-single');if(!fab||!root)return;
+  root.insertAdjacentHTML('beforeend','<div class="single-modal" id="photoSourceModal"><div class="dialog photo-source-dialog"><button class="dialog-close" id="photoSourceX" aria-label="닫기">×</button><div class="safety-icon">📷</div><p class="sheet-kicker">PHOTO ANALYSIS</p><h2>사진 가져오기</h2><p>생물이 잘 보이도록 밝고 가까운 사진을 선택하세요.</p><div class="photo-source-actions" id="photoSourceActions"><button type="button" id="openWebcam">📸 카메라로 촬영</button><label for="filePhoto">🖼️ 파일에서 선택</label></div><div class="webcam-panel" id="webcamPanel"><video id="webcamVideo" autoplay playsinline muted></video><button type="button" id="takeWebcamPhoto">촬영하기</button><button type="button" id="backToSource">다른 방법 선택</button></div><input id="filePhoto" type="file" accept="image/*" hidden></div></div>');
+  const modal=document.querySelector('#photoSourceModal'),actions=document.querySelector('#photoSourceActions'),panel=document.querySelector('#webcamPanel'),video=document.querySelector('#webcamVideo');let stream;
+  const stopCamera=()=>{stream?.getTracks().forEach(track=>track.stop());stream=null;video.srcObject=null;panel.classList.remove('show');actions.hidden=false;};
+  const close=()=>{stopCamera();modal.classList.remove('show')};
+  const analyze=file=>{document.dispatchEvent(new CustomEvent('cfn-photo-picked',{detail:{file}}));const handler=document.querySelector('#singlePhoto').onchange;if(handler)handler({target:{files:[file]}});close();};
   fab.addEventListener('click',event=>{event.preventDefault();modal.classList.add('show');},true);
   document.querySelector('#photoSourceX').onclick=close;
-  ['cameraPhoto','filePhoto'].forEach(id=>document.querySelector(`#${id}`).onchange=event=>{
-    const handler=document.querySelector('#singlePhoto').onchange;
-    if(event.target.files[0]&&handler)handler({target:{files:event.target.files}});
-    close();event.target.value='';
-  });
+  document.querySelector('#filePhoto').onchange=event=>{if(event.target.files[0])analyze(event.target.files[0]);event.target.value=''};
+  document.querySelector('#openWebcam').onclick=async()=>{try{if(!navigator.mediaDevices?.getUserMedia)throw Error();stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});video.srcObject=stream;actions.hidden=true;panel.classList.add('show');}catch{document.querySelector('#filePhoto').click();}};
+  document.querySelector('#backToSource').onclick=stopCamera;
+  document.querySelector('#takeWebcamPhoto').onclick=()=>{const canvas=document.createElement('canvas');canvas.width=video.videoWidth||640;canvas.height=video.videoHeight||480;canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(blob)analyze(new File([blob],`cfn-camera-${Date.now()}.jpg`,{type:'image/jpeg'}));},'image/jpeg',.92)};
 })();

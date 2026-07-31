@@ -80,15 +80,25 @@
     if(/오징어|한치/.test(name))return '오징어류';
     return aliases[name]||name;
   };
-  const list=document.querySelector('#albumList');if(!list)return;
-  const enrich=()=>list.querySelectorAll('.album-item').forEach(item=>{
-    if(!item.classList.contains('registered')||item.querySelector('.album-recipe'))return;
-    const raw=item.querySelector('b')?.textContent?.trim(),name=canonical(raw);
-    const recipe=recipes[name]||'조리법을 제공하지 않아요 · 식용 여부가 확인되지 않은 후보는 채취·섭취하지 마세요.';
-    const edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요');
-    const search=`https://search.naver.com/search.naver?query=${encodeURIComponent(`${name||'해양생물'} 안전 조리법`)}`;
-    const parent=item.querySelector('.album-meta')||item.querySelector('div');if(!parent)return;
-    parent.insertAdjacentHTML('beforeend',`<p class="album-recipe"><span>🍳</span><span><b>${edible?'추천 조리법':'안전 안내'}</b> ${escape(recipe)}</span></p>${edible?`<a class="recipe-search" href="${search}" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>`:''}`);
-  });
+  const list=document.querySelector('#albumList'),root=document.querySelector('.mgn-single');if(!list||!root)return;
+  const description=name=>{
+    const groups={shell:['전복','소라','고둥','바지락','맛조개','가리비','새조개','가무락조개','개조개','개량조개','비단조개','모시조개','재첩','대수리','피뿔고둥','굴','홍합','피조개','새꼬막','동죽','백합','키조개','골뱅이'],crab:['꽃게','박하지','풀게','민꽃게','털게','돌게','칠게','새우류','대하','보리새우'],fish:['망둥어','광어','도다리','숭어','노래미','망상어','학공치','전어','짱뚱어','베도라치','우럭'],cephalopod:['낙지','문어','주꾸미','꼴뚜기류','오징어류','갑오징어류'],seaweed:['파래','청각','다시마','미역','톳']};
+    if(groups.shell.includes(name))return '부산 연안의 모래·갯벌 또는 암반 주변에서 관찰되는 조개·고둥류예요. 비슷한 종이 많으므로 사진 분석만으로 식용 여부를 단정하면 안 됩니다.';
+    if(groups.crab.includes(name))return '연안 바닥과 갯벌에서 활동하는 갑각류예요. 집게와 가시에 다칠 수 있으니 맨손으로 다루지 마세요.';
+    if(groups.fish.includes(name))return '부산 연안의 얕은 바다와 암초·갯벌 주변에서 볼 수 있는 물고기예요. 종별 채취 규정과 크기를 확인하세요.';
+    if(groups.cephalopod.includes(name))return '연안의 모래 바닥과 바위틈을 이용하는 두족류예요. 계절과 산란기에 따라 관찰·채취 조건이 달라질 수 있습니다.';
+    if(groups.seaweed.includes(name))return '부산 연안의 암반에 붙어 자라는 해조류예요. 채취 해역의 위생 상태와 지역 규정을 확인하세요.';
+    return '부산 바다에서 관찰되는 해양생물이에요. 사진 분석 결과만으로는 정확한 종과 식용 여부를 확정할 수 없습니다.';
+  };
+  root.insertAdjacentHTML('beforeend','<div class="single-modal" id="dexDetailModal"><div class="dialog dex-detail-dialog"><button class="dialog-close" id="dexDetailX" aria-label="도감 상세 닫기">×</button><p class="sheet-kicker">REGISTERED MARINE DEX</p><h2 id="dexDetailName"></h2><img class="dex-detail-photo" id="dexDetailPhoto" alt="등록한 해양생물 사진"><h3>생물 설명</h3><p id="dexDetailDescription"></p><div class="dex-recipe" id="dexDetailRecipe"></div></div></div>');
+  const detail=document.querySelector('#dexDetailModal');
+  const enrich=()=>list.querySelectorAll('.album-item.registered').forEach(item=>{item.dataset.dexDetail=canonical(item.querySelector('b')?.textContent?.trim());item.setAttribute('tabindex','0');item.setAttribute('role','button');item.setAttribute('aria-label',item.dataset.dexDetail+' 도감 상세 보기')});
+  const openDetail=item=>{
+    const name=item.dataset.dexDetail||canonical(item.querySelector('b')?.textContent?.trim()),recipe=recipes[name]||'조리법을 제공하지 않아요 · 식용 여부가 확인되지 않은 후보는 채취·섭취하지 마세요.',edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요'),search='https://search.naver.com/search.naver?query='+encodeURIComponent((name||'해양생물')+' 안전 조리법'),photo=item.querySelector('.album-photo img')?.src;
+    document.querySelector('#dexDetailName').textContent=name;document.querySelector('#dexDetailPhoto').src=photo||'';document.querySelector('#dexDetailPhoto').style.display=photo?'block':'none';document.querySelector('#dexDetailDescription').textContent=description(name);document.querySelector('#dexDetailRecipe').innerHTML='<h3>'+(edible?'추천 조리법':'안전 안내')+'</h3><p>'+escape(recipe)+'</p>'+(edible?'<a class="recipe-search" href="'+search+'" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>':'');detail.classList.add('show');
+  };
   new MutationObserver(enrich).observe(list,{childList:true,subtree:true});enrich();
+  document.querySelector('#dexDetailX').onclick=()=>detail.classList.remove('show');
+  document.addEventListener('click',event=>{const item=event.target.closest('.album-item.registered[data-dex-detail]');if(item&&!event.target.closest('button'))openDetail(item)});
+  document.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&document.activeElement?.matches('.album-item.registered[data-dex-detail]')){event.preventDefault();openDetail(document.activeElement)}});
 })();

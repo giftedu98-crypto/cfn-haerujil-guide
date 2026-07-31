@@ -30,6 +30,35 @@
     '우럭':'매운탕 또는 구이 · 비늘과 내장을 제거하고 속까지 익히세요.',
     '미역':'국 또는 무침 · 깨끗한 해역에서 채취한 것만 세척해 사용하세요.',
     '톳':'무침 또는 밥 · 불린 물은 버리고 충분히 삶아 드세요.',
+    '주꾸미':'샤부샤부 또는 볶음 · 내장과 먹물주머니를 제거한 뒤 충분히 익히세요.',
+    '가리비':'버터구이 또는 찜 · 가열해도 입이 열리지 않는 것은 버리세요.',
+    '새조개':'샤부샤부 또는 데침 · 해감 후 짧게 익혀 드세요.',
+    '가무락조개':'칼국수 또는 찜 · 해감 후 충분히 가열하세요.',
+    '개조개':'맑은 탕 또는 찜 · 해감 후 충분히 가열하세요.',
+    '개량조개':'칼국수 또는 된장국 · 해감 후 충분히 가열하세요.',
+    '비단조개':'맑은 탕 또는 칼국수 · 해감 후 충분히 가열하세요.',
+    '모시조개':'된장국 또는 탕 · 해감 후 충분히 가열하세요.',
+    '재첩':'국 또는 된장국 · 하구 채취물은 깨끗이 해감하고 충분히 가열하세요.',
+    '대수리':'삶아서 무침 · 식용 종을 정확히 확인하고 충분히 가열하세요.',
+    '피뿔고둥':'삶아서 무침 · 내장을 제거하고 식용 종만 충분히 가열하세요.',
+    '박하지':'된장국 또는 찜 · 살아 있거나 신선한 개체만 충분히 익히세요.',
+    '풀게':'탕 또는 찜 · 식용 종임을 확인하고 충분히 가열하세요.',
+    '민꽃게':'찜 또는 탕 · 살아 있거나 신선한 개체만 충분히 익히세요.',
+    '털게':'찜 또는 탕 · 살아 있거나 신선한 개체만 충분히 익히세요.',
+    '새우류':'소금구이 또는 탕 · 식용 종을 확인하고 중심부까지 익히세요.',
+    '대하':'소금구이 또는 찜 · 내장을 손질하고 충분히 익히세요.',
+    '보리새우':'소금구이 또는 볶음 · 깨끗이 세척하고 충분히 익히세요.',
+    '광어':'구이 또는 매운탕 · 비늘과 내장을 제거하고 속까지 익히세요.',
+    '도다리':'쑥국 또는 구이 · 비늘과 내장을 제거하고 충분히 익히세요.',
+    '숭어':'구이 또는 매운탕 · 내장을 손질하고 충분히 익히세요.',
+    '노래미':'매운탕 또는 구이 · 가시와 내장을 손질하고 속까지 익히세요.',
+    '망상어':'구이 또는 매운탕 · 비늘과 내장을 제거하고 충분히 익히세요.',
+    '학공치':'구이 또는 튀김 · 내장을 손질하고 충분히 익히세요.',
+    '전어':'구이 또는 조림 · 비늘·내장을 손질하고 충분히 익히세요.',
+    '미더덕':'된장국 또는 찜 · 깨끗이 세척하고 충분히 익히세요.',
+    '파래':'무침 또는 전 · 깨끗한 해역의 것만 세척해 사용하세요.',
+    '청각':'무침 또는 국 · 깨끗한 해역의 것만 세척해 사용하세요.',
+    '다시마':'국물 또는 조림 · 이물질을 세척한 뒤 충분히 가열하세요.',
     '불가사리':'조리법을 제공하지 않아요 · 식용 여부가 불분명하므로 채취·섭취하지 마세요.',
     '상어류':'조리법을 제공하지 않아요 · 해루질 대상이 아니므로 거리를 두고 안전하게 이동하세요.',
     '가오리류':'조리법을 제공하지 않아요 · 꼬리 가시에 다칠 수 있으니 접근하거나 밟지 마세요.',
@@ -51,12 +80,13 @@
   const enrich=()=>list.querySelectorAll('.album-item').forEach(item=>{
     if(item.querySelector('.album-recipe'))return;
     const raw=item.querySelector('b')?.textContent?.trim(),name=canonical(raw);
-    const recipe=recipes[name]||'조리법을 제공하지 않아요 · 사진 판별만으로는 식용 여부를 확인할 수 없습니다. 정확한 종을 확인하기 전에는 채취·섭취하지 마세요.';
+    const recipe=recipes[name]||'조리법을 제공하지 않아요 · 식용 여부가 확인되지 않은 후보는 채취·섭취하지 마세요.';
     const edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요');
     const search=`https://search.naver.com/search.naver?query=${encodeURIComponent(`${name||'해양생물'} 안전 조리법`)}`;
     const parent=item.querySelector('.album-meta')||item.querySelector('div');if(!parent)return;
-    parent.insertAdjacentHTML('beforeend',`<p class="recipe-safety">⚠ 사진 분석 결과는 식용 판정이 아닙니다. <b>정확한 종을 확인해 식용이 확실한 경우에만</b> 아래 조리법을 참고하세요.</p><p class="album-recipe"><span>🍳</span><span><b>${edible?'식용 확인 후 추천 조리':'안전 안내'}</b> ${escape(recipe)}</span></p>${edible?`<a class="recipe-search" href="${search}" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>`:''}`);
+    parent.insertAdjacentHTML('beforeend',`<p class="album-recipe"><span>🍳</span><span><b>${edible?'식용 확인 후 추천 조리':'안전 안내'}</b> ${escape(recipe)}</span></p>${edible?`<a class="recipe-search" href="${search}" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>`:''}`);
   });
   new MutationObserver(enrich).observe(list,{childList:true,subtree:true});enrich();
 })();
+
 

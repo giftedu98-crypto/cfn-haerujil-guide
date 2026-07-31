@@ -21,7 +21,7 @@ window.addEventListener('load',()=>{
     const placed=[];
     labels.sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top).forEach(label=>{
       const rect=label.getBoundingClientRect();
-      const shifts=[0,-32,32,-64,64,-96,96];
+      const shifts=[0,-42,42,-84,84,-126,126,-168,168];
       const shift=shifts.find(offset=>!placed.some(other=>
         rect.left<other.right && rect.right>other.left &&
         rect.top+offset<other.bottom && rect.bottom+offset>other.top
@@ -41,4 +41,5 @@ window.addEventListener('load',()=>{
   });
   map.on('zoomend moveend resize',scheduleLabels);
   setTimeout(()=>{map.invalidateSize();map.fitBounds(bounds,{paddingTopLeft:[10,380],paddingBottomRight:[10,150]});scheduleLabels();},700);
+  setTimeout(scheduleLabels,1400);
 });

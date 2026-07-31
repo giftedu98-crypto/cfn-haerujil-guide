@@ -3,7 +3,7 @@ window.addEventListener('load',()=>{
   const root=document.querySelector('.mgn-single');
   root.insertAdjacentHTML('afterbegin','<div id="realBusanMap" aria-label="부산 해루질 포인트 지도"></div>');
   const bounds=L.latLngBounds([[34.99,128.88],[35.37,129.35]]);
-  const map=L.map('realBusanMap',{zoomControl:false,attributionControl:false,maxBounds:bounds,maxBoundsViscosity:1,minZoom:9,maxZoom:15});
+  const map=L.map('realBusanMap',{zoomControl:false,attributionControl:false,maxBounds:bounds,maxBoundsViscosity:1,minZoom:9,maxZoom:15});window.CFNMap=map;
   map.fitBounds(bounds,{paddingTopLeft:[10,380],paddingBottomRight:[10,150]});
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(map);
   const spots={

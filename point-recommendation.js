@@ -1,5 +1,5 @@
 (() => {
-  const labels={dadaepo:'다대포 해수욕장',amnam:'암남공원',yeongdo:'영도 흰여울',haeundae:'청사포',gijang:'기장 연화리'};
+  const labels={dadaepo:'다대포',amnam:'암남공원',yeongdo:'영도 흰여울',haeundae:'청사포',gijang:'기장 연화리'};
   let state='good';
   const judgement=()=>{
     const base=state==='risky'?['자제','오늘은 기상·파고 조건으로 해루질을 권하지 않아요.']:state==='caution'?['주의','물때·파고·현장 출입 통제를 확인한 뒤 짧게 이용하세요.']:['추천','현재 조건에서는 물때와 안전수칙을 확인한 뒤 이용하기 좋아요.'];
@@ -16,7 +16,7 @@
   };
   const enrichSheet=()=>{
     const sheet=document.querySelector('#sheet');if(!sheet||!sheet.classList.contains('show')||sheet.querySelector('.point-judgement'))return;
-    const name=sheet.querySelector('h2')?.textContent?.trim(),id=Object.keys(labels).find(key=>labels[key]===name||(key==='haeundae'&&name==='해운대 청사포'));if(!id)return;
+    const name=sheet.querySelector('h2')?.textContent?.trim(),id=Object.keys(labels).find(key=>labels[key]===name||(key==='dadaepo'&&name==='다대포 해수욕장')||(key==='haeundae'&&name==='해운대 청사포'));if(!id)return;
     const [level,text]=judgement()[id];sheet.querySelector('.sheet-desc')?.insertAdjacentHTML('afterend',`<div class="point-judgement point-${level==='추천'?'good':level==='주의'?'caution':'risk'}"><b>오늘의 판단 · ${level}</b><span>${text}</span></div>`);
   };
   const refresh=()=>{decorate();enrichSheet();};

@@ -20,7 +20,8 @@
   const enrich=()=>list.querySelectorAll('.album-item').forEach(item=>{
     if(item.querySelector('.album-recipe'))return;
     const name=item.querySelector('b')?.textContent?.trim(),recipe=recipes[name]||'추천 조리법 없음 · 식용 여부가 불확실하면 채취·섭취하지 마세요.';
-    item.querySelector('div')?.insertAdjacentHTML('beforeend',`<p class="album-recipe">🍳 ${recipe}</p>`);
+    const search=`https://search.naver.com/search.naver?query=${encodeURIComponent(`${name} 조리법 레시피`)}`;
+    item.querySelector('div')?.insertAdjacentHTML('beforeend',`<p class="album-recipe">🍳 ${recipe}</p><a class="recipe-search" href="${search}" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>`);
   });
   new MutationObserver(enrich).observe(list,{childList:true,subtree:true});enrich();
 })();

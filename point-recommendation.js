@@ -21,10 +21,10 @@
     const [level,text]=judgement()[id];sheet.querySelector('.sheet-desc')?.insertAdjacentHTML('afterend',`<div class="point-judgement point-${level==='추천'?'good':level==='주의'?'caution':'risk'}"><b>오늘의 판단 · ${level}</b><span>${text}</span></div>`);
   };
   const refresh=()=>{decorate();enrichSheet();};
-  window.addEventListener('load',()=>{setTimeout(refresh,850);const sheet=document.querySelector('#sheet');if(sheet)new MutationObserver(()=>setTimeout(enrichSheet,0)).observe(sheet,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});});
+  window.addEventListener('load',()=>setTimeout(refresh,850));
+  document.addEventListener('cfn:point-opened',()=>enrichSheet());
   const weatherUrl='https://api.open-meteo.com/v1/forecast?latitude=35.1796&longitude=129.0756&current=precipitation,wind_speed_10m,weather_code&timezone=Asia%2FSeoul';
   const marineUrl='https://marine-api.open-meteo.com/v1/marine?latitude=35.1796&longitude=129.0756&current=wave_height&timezone=Asia%2FSeoul';
   const weatherRequest=window.__cfnBusanWeatherPromise||(window.__cfnBusanWeatherPromise=Promise.all([fetch(weatherUrl).then(r=>r.json()),fetch(marineUrl).then(r=>r.json())]));
   weatherRequest.then(([weather,marine])=>{const now=weather.current||{},sea=marine.current||{},wind=Number(now.wind_speed_10m||0),rain=Number(now.precipitation||0),wave=Number(sea.wave_height||0),code=Number(now.weather_code||0);state=rain>=.5||wind>=10||wave>=1||code>=80?'risky':rain>0||wind>=7||wave>=.6||code>=61?'caution':'good';refresh()}).catch(refresh);
 })();
-

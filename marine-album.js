@@ -26,6 +26,11 @@
     document.querySelector('#albumDeleteChoices').innerHTML=selected.map((item,index)=>'<button type="button" class="album-delete-choice" data-album-remove="'+item.id+'"><img src="'+URL.createObjectURL(item.photo)+'" alt="'+escape(normalizedName(item.name))+' 사진 '+(index+1)+'"><span>사진 '+(index+1)+' 삭제</span></button>').join('');
     deleteModal.classList.add('show');
   };
+  const removeWithConfirm=async id=>{
+    const item=(await entries()).find(entry=>Number(entry.id)===Number(id));if(!item)return;
+    if(!window.confirm('선택한 '+normalizedName(item.name)+' 사진을 사진첩에서 삭제할까요?'))return;
+    await remove(item.id);deleteModal.classList.remove('show');await render();
+  };
   document.querySelector('#albumFab').onclick=async()=>{await render();modal.classList.add('show')};
   document.querySelector('#albumX').onclick=()=>modal.classList.remove('show');
   document.querySelector('#albumPhotoX').onclick=()=>viewer.classList.remove('show');
@@ -42,11 +47,8 @@
   new MutationObserver(()=>setTimeout(addSaveButton,0)).observe(bioText,{childList:true,subtree:true});
   document.addEventListener('click',async event=>{
     const view=event.target.closest('[data-album-view]');if(view){await showPhoto(view.dataset.albumView);return;}
-    const choose=event.target.closest('[data-album-delete]');if(choose){await chooseDelete(choose.dataset.albumDelete);return;}
+    const choose=event.target.closest('[data-album-delete]');if(choose){const ids=choose.dataset.albumDelete.split(',');if(ids.length===1)await removeWithConfirm(ids[0]);else await chooseDelete(choose.dataset.albumDelete);return;}
     const removeButton=event.target.closest('[data-album-remove]');if(!removeButton)return;
-    const item=(await entries()).find(entry=>Number(entry.id)===Number(removeButton.dataset.albumRemove));if(!item)return;
-    if(!window.confirm('선택한 '+normalizedName(item.name)+' 사진을 사진첩에서 삭제할까요?'))return;
-    await remove(item.id);deleteModal.classList.remove('show');await render();
+    await removeWithConfirm(removeButton.dataset.albumRemove);
   });
 })();
-

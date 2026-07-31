@@ -76,7 +76,17 @@
     ['미역','a brown seaweed','', '암반에 붙어 자라는 갈조류입니다.','종별 상이','종별 상이'],
     ['톳','a hijiki seaweed','', '조간대 암반에 붙어 자라는 갈조류입니다.','종별 상이','종별 상이']
   ];
-  let classifier;
+  let classifier,isAnalyzing=false;
+  const nextPaint=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  async function prepareAnalysisPhoto(file){
+    if(!('createImageBitmap' in window))return URL.createObjectURL(file);
+    const bitmap=await createImageBitmap(file),max=1280,scale=Math.min(1,max/Math.max(bitmap.width,bitmap.height));
+    if(scale===1){bitmap.close?.();return URL.createObjectURL(file);}
+    const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);
+    canvas.getContext('2d',{alpha:false}).drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close?.();
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.84));
+    return URL.createObjectURL(blob||file);
+  }
   async function getClassifier(){
     if(classifier)return classifier;
     const {pipeline,env}=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1');
@@ -92,11 +102,16 @@
     return `<p class="sheet-kicker">FREE PHOTO MATCH · BUSAN COAST</p><h2>${escape(name)}</h2><img class="ai-preview" src="${shown}" alt="${escape(name)} 사진"><p class="analysis-badge">가장 가능성이 높은 대상 · 사진 유사도 ${score}% · 부산 연안 후보 ${candidates.length}종 비교</p><p>${escape(description)}</p><div class="reg-grid"><div><span>금지체장</span><b>${escape(min)}</b></div><div><span>금어기</span><b>${escape(season)}</b></div></div><p class="safety-note">다른 후보: ${ranked.slice(1,3).map(x=>escape(candidates[x.index][0])).join(' · ')||'없음'}<br>유사도는 정답 보증이 아닙니다. 보호종·위험 생물 또는 불확실한 경우 채취하지 마세요.</p><div class="analysis-feedback"><strong>도움이 됐나요?</strong><button type="button" data-feedback="yes">Yes</button><button type="button" data-feedback="no">No</button><small id="feedbackStatus"></small></div>`;
   }
   document.querySelector('#singlePhoto').onchange=async e=>{
-    const file=e.target.files[0]; if(!file)return;
+    const file=e.target.files[0]; if(!file||isAnalyzing)return;
+    isAnalyzing=true;
     const box=document.querySelector('#bioText'),modal=document.querySelector('#bio');
-    const photo=URL.createObjectURL(file); modal.classList.add('show');
-    box.innerHTML='<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>사진에서 특징을 비교하고 있어요…</h2><img class="ai-preview" src="'+photo+'" alt="촬영 사진"><p>처음 한 번만 무료 공개 모델을 내려받습니다. Wi-Fi에서는 1~3분 정도 걸릴 수 있어요.</p>';
+    const originalPhoto=URL.createObjectURL(file);let photo=originalPhoto;modal.classList.add('show');
+    box.innerHTML='<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>사진을 분석할 준비를 하고 있어요…</h2><img class="ai-preview" src="'+originalPhoto+'" alt="촬영 사진"><p>큰 사진은 분석 전에 가볍게 줄이고, 결과 화면을 먼저 표시합니다.</p>';
     try{
+      await nextPaint();
+      photo=await prepareAnalysisPhoto(file);
+      box.innerHTML='<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>사진에서 특징을 비교하고 있어요…</h2><img class="ai-preview" src="'+photo+'" alt="촬영 사진"><p>처음 한 번만 무료 공개 모델을 내려받습니다. Wi-Fi에서는 1~3분 정도 걸릴 수 있어요.</p>';
+      await nextPaint();
       const model=await getClassifier();
       const output=await model(photo,candidates.map(x=>x[1]));
       const ranked=output.map(x=>({index:candidates.findIndex(c=>c[1]===x.label),score:x.score})).filter(x=>x.index>=0).sort((a,b)=>b.score-a.score);
@@ -104,7 +119,7 @@
       box.innerHTML=resultCard(candidates[ranked[0].index],photo,ranked);
     }catch(err){
       box.innerHTML='<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>무료 후보 모델을 불러오지 못했습니다</h2><img class="ai-preview" src="'+photo+'" alt="촬영 사진"><p>인터넷 연결을 확인한 뒤 다시 시도해 주세요. 첫 실행에는 모델 다운로드가 필요합니다.</p><p class="safety-note">오류: '+escape(err.message||'알 수 없음')+'</p>';
-    }
+    }finally{isAnalyzing=false;}
   };
   document.addEventListener('click',e=>{
     const button=e.target.closest('[data-feedback]');if(!button)return;
@@ -116,4 +131,5 @@
     document.querySelectorAll('[data-feedback]').forEach(b=>b.disabled=true);
   });
 })();
+
 

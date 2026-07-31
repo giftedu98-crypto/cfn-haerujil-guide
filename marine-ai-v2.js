@@ -22,7 +22,27 @@
     ['오징어류','a squid','', '빠르게 헤엄치는 두족류입니다.','종별 상이','종별 상이'],
     ['갑오징어류','a cuttlefish','', '납작한 몸과 내부 뼈를 가진 두족류입니다.','종별 상이','종별 상이'],
     ['소라게','a hermit crab','', '다른 조개껍데기에 들어가 사는 갑각류입니다.','없음','없음'],
-    ['갯지렁이류','a marine polychaete worm','', '갯벌에 사는 환형동물입니다.','채취 비권장','없음']
+    ['갯지렁이류','a marine polychaete worm','', '갯벌에 사는 환형동물입니다.','채취 비권장','없음'],
+    ['굴','an oyster shellfish','', '바위나 구조물에 붙어 사는 이매패류입니다.','종별 상이','종별 상이'],
+    ['홍합','a mussel shellfish','', '군집을 이루어 붙어 사는 이매패류입니다.','종별 상이','종별 상이'],
+    ['피조개','an ark shellfish','', '붉은 혈색소를 가진 조개류입니다.','종별 상이','종별 상이'],
+    ['새꼬막','a blood cockle shellfish','', '갯벌에 사는 작은 조개류입니다.','종별 상이','종별 상이'],
+    ['동죽','a surf clam shellfish','', '모래 갯벌에 사는 조개류입니다.','종별 상이','종별 상이'],
+    ['백합','a venus clam shellfish','', '모래 바닥에 사는 큰 조개류입니다.','종별 상이','종별 상이'],
+    ['키조개','a pen shell shellfish','', '부채 모양의 큰 조개류입니다.','종별 상이','종별 상이'],
+    ['골뱅이','a whelk sea snail','', '나선형 껍데기를 가진 복족류입니다.','종별 상이','종별 상이'],
+    ['따개비','a barnacle crustacean','', '바위에 단단히 붙어 사는 갑각류입니다.','채취 비권장','없음'],
+    ['돌게','a rock crab','', '암반 조간대에서 발견되는 게류입니다.','종별 상이','종별 상이'],
+    ['칠게','a shore crab','', '갯벌 표면을 빠르게 이동하는 게류입니다.','종별 상이','종별 상이'],
+    ['농게','a fiddler crab','', '한쪽 집게발이 큰 갯벌 게류입니다.','채취 비권장','없음'],
+    ['짱뚱어','a mudskipper fish','', '갯벌 위를 뛰어다니는 어류입니다.','종별 상이','종별 상이'],
+    ['베도라치','a blenny fish','', '바위 웅덩이에 사는 소형 어류입니다.','종별 상이','종별 상이'],
+    ['쏨뱅이','a scorpionfish fish','', '등지느러미 가시에 주의해야 하는 어류입니다.','채취 비권장','종별 상이'],
+    ['우럭','a rockfish fish','', '암초 주변에 사는 대표적인 연안 어류입니다.','종별 상이','종별 상이'],
+    ['복어류','a pufferfish fish','', '독성이 있을 수 있으므로 맨손 취급과 섭취를 피하세요.','채취하지 마세요','종별 상이'],
+    ['해마','a seahorse fish','', '보호가 필요한 희귀 해양생물일 수 있습니다.','채취하지 마세요','종별 상이'],
+    ['미역','a brown seaweed','', '암반에 붙어 자라는 갈조류입니다.','종별 상이','종별 상이'],
+    ['톳','a hijiki seaweed','', '조간대 암반에 붙어 자라는 갈조류입니다.','종별 상이','종별 상이']
   ];
   let classifier;
   async function getClassifier(){
@@ -37,7 +57,7 @@
     const [name,,reference,description,min,season]=best;
     const shown=reference||photo;
     const score=Math.round((ranked[0]?.score||0)*100);
-    return `<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>${escape(name)}</h2><img class="ai-preview" src="${shown}" alt="${escape(name)} 사진"><p class="analysis-badge">사진 유사도 ${score}% · 무료 브라우저 후보 비교</p><p>${escape(description)}</p><div class="reg-grid"><div><span>금지체장</span><b>${escape(min)}</b></div><div><span>금어기</span><b>${escape(season)}</b></div></div><p class="safety-note">다른 후보: ${ranked.slice(1,3).map(x=>escape(candidates[x.index][0])).join(' · ')||'없음'}<br>유사도는 정답 보증이 아닙니다. 보호종·위험 생물 또는 불확실한 경우 채취하지 마세요.</p>`;
+    return `<p class="sheet-kicker">FREE PHOTO MATCH · BUSAN COAST</p><h2>${escape(name)}</h2><img class="ai-preview" src="${shown}" alt="${escape(name)} 사진"><p class="analysis-badge">사진 유사도 ${score}% · 부산 연안 후보 ${candidates.length}종 비교</p><p>${escape(description)}</p><div class="reg-grid"><div><span>금지체장</span><b>${escape(min)}</b></div><div><span>금어기</span><b>${escape(season)}</b></div></div><p class="safety-note">다른 후보: ${ranked.slice(1,3).map(x=>escape(candidates[x.index][0])).join(' · ')||'없음'}<br>유사도는 정답 보증이 아닙니다. 보호종·위험 생물 또는 불확실한 경우 채취하지 마세요.</p><div class="analysis-feedback"><strong>도움이 됐나요?</strong><button type="button" data-feedback="yes">Yes</button><button type="button" data-feedback="no">No</button><small id="feedbackStatus"></small></div>`;
   }
   document.querySelector('#singlePhoto').onchange=async e=>{
     const file=e.target.files[0]; if(!file)return;
@@ -54,4 +74,13 @@
       box.innerHTML='<p class="sheet-kicker">FREE PHOTO MATCH</p><h2>무료 후보 모델을 불러오지 못했습니다</h2><img class="ai-preview" src="'+photo+'" alt="촬영 사진"><p>인터넷 연결을 확인한 뒤 다시 시도해 주세요. 첫 실행에는 모델 다운로드가 필요합니다.</p><p class="safety-note">오류: '+escape(err.message||'알 수 없음')+'</p>';
     }
   };
+  document.addEventListener('click',e=>{
+    const button=e.target.closest('[data-feedback]');if(!button)return;
+    const answer=button.dataset.feedback;
+    const history=JSON.parse(localStorage.getItem('cfnPhotoFeedback')||'[]');
+    history.push({answer,at:new Date().toISOString()});
+    localStorage.setItem('cfnPhotoFeedback',JSON.stringify(history.slice(-50)));
+    document.querySelector('#feedbackStatus').textContent=answer==='yes'?'감사합니다. 결과 개선에 참고할게요.':'알려주셔서 감사합니다. 불확실한 생물은 채취하지 마세요.';
+    document.querySelectorAll('[data-feedback]').forEach(b=>b.disabled=true);
+  });
 })();

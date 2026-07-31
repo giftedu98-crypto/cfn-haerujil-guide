@@ -15,6 +15,22 @@ window.addEventListener('load',()=>{
     hiddenPin.click();
   };
   window.CFNOpenPoint=openPoint;
+  const placeLabels=()=>{
+    const labels=[...root.querySelectorAll('.point-name')];
+    labels.forEach(label=>label.style.setProperty('--label-shift','0px'));
+    const placed=[];
+    labels.sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top).forEach(label=>{
+      const rect=label.getBoundingClientRect();
+      const shifts=[0,-32,32,-64,64,-96,96];
+      const shift=shifts.find(offset=>!placed.some(other=>
+        rect.left<other.right && rect.right>other.left &&
+        rect.top+offset<other.bottom && rect.bottom+offset>other.top
+      )) ?? 0;
+      label.style.setProperty('--label-shift',`${shift}px`);
+      placed.push({left:rect.left,right:rect.right,top:rect.top+shift,bottom:rect.bottom+shift});
+    });
+  };
+  const scheduleLabels=()=>requestAnimationFrame(placeLabels);
   Object.entries(spots).forEach(([id,[name,lat,lng]])=>{
     const icon=L.divIcon({
       className:'cfn-marker-wrap',
@@ -23,5 +39,6 @@ window.addEventListener('load',()=>{
     });
     L.marker([lat,lng],{icon,keyboard:true}).addTo(map);
   });
-  setTimeout(()=>{map.invalidateSize();map.fitBounds(bounds,{paddingTopLeft:[10,380],paddingBottomRight:[10,150]});},700);
+  map.on('zoomend moveend resize',scheduleLabels);
+  setTimeout(()=>{map.invalidateSize();map.fitBounds(bounds,{paddingTopLeft:[10,380],paddingBottomRight:[10,150]});scheduleLabels();},700);
 });

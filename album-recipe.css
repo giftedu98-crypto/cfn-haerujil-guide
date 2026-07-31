@@ -1,1 +1,4 @@
-.album-recipe{margin:5px 0 0;color:#38616a;font:800 9px/1.35 'Gowun Dodum'}
+.album-recipe{display:flex;gap:5px;margin:6px 0 0;color:#254f5b;font:800 10px/1.55 'Gowun Dodum'}
+.album-recipe b{display:inline;color:#087975;font-weight:900}.album-recipe span:first-child{flex:0 0 auto}.recipe-search{font-size:10px!important}
+.recipe-safety{margin:7px 0 0;padding:7px 8px;border-radius:7px;background:#fff2e7;color:#874a23;font:800 9px/1.5 'Gowun Dodum'}.recipe-safety b{font-weight:900}
+

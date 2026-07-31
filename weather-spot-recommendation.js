@@ -5,7 +5,8 @@
   const spot=document.querySelector('#weatherSpot'),reason=document.querySelector('#weatherReason');
   const weatherUrl='https://api.open-meteo.com/v1/forecast?latitude=35.1796&longitude=129.0756&current=temperature_2m,precipitation,wind_speed_10m,weather_code&timezone=Asia%2FSeoul';
   const marineUrl='https://marine-api.open-meteo.com/v1/marine?latitude=35.1796&longitude=129.0756&current=wave_height&timezone=Asia%2FSeoul';
-  Promise.all([fetch(weatherUrl).then(r=>r.json()),fetch(marineUrl).then(r=>r.json())]).then(([weather,marine])=>{
+  const weatherRequest=window.__cfnBusanWeatherPromise||(window.__cfnBusanWeatherPromise=Promise.all([fetch(weatherUrl).then(r=>r.json()),fetch(marineUrl).then(r=>r.json())]));
+  weatherRequest.then(([weather,marine])=>{
     const now=weather.current||{},sea=marine.current||{};
     const wind=Number(now.wind_speed_10m||0),rain=Number(now.precipitation||0),wave=Number(sea.wave_height||0),code=Number(now.weather_code||0);
     const risky=rain>=0.5||wind>=10||wave>=1||code>=80;
@@ -15,3 +16,4 @@
     reason.textContent=`비 ${rain.toFixed(1)} mm · 바람 ${wind.toFixed(1)} km/h · 파고 ${wave.toFixed(1)} m — 물때와 출입 통제를 확인한 뒤 이용하세요.`;
   }).catch(()=>{spot.textContent='날씨 정보를 불러오지 못했어요';reason.textContent='인터넷 연결 후 다시 열면 오늘의 추천 포인트를 안내합니다.';});
 })();
+

@@ -72,6 +72,7 @@
     '해마':'조리법을 제공하지 않아요 · 보호가 필요한 생물일 수 있으니 채취하지 마세요.'
   };
   const aliases={'분석 결과:':'','분석 결과':'','바지락조개':'바지락','참소라':'소라','문어류':'문어','망둑어':'망둥어','성게류':'성게','해삼류':'해삼','꽃게류':'꽃게','상어':'상어류','가오리':'가오리류','해파리':'해파리류','오징어':'오징어류','살오징어':'오징어류','한치':'오징어류','갑오징어':'갑오징어류','꼴뚜기':'꼴뚜기류','꼴뚜기류':'꼴뚜기류','복어':'복어류'};
+  const regulations={'전복':['각장 10 cm','9.1 — 10.31'],'소라':['각장 5 cm','6.1 — 8.31'],'해삼':['체장 15 cm','7.1 — 7.31'],'꽃게':['갑장 6.4 cm','6.21 — 8.20']};
   const escape=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const canonical=value=>{
     let name=String(value||'').replace(/^분석 결과\s*:\s*/,'').replace(/\s*\([^)]*\)\s*/g,'').trim();
@@ -94,8 +95,8 @@
   const detail=document.querySelector('#dexDetailModal');
   const enrich=()=>list.querySelectorAll('.album-item.registered').forEach(item=>{item.dataset.dexDetail=canonical(item.querySelector('b')?.textContent?.trim());item.setAttribute('tabindex','0');item.setAttribute('role','button');item.setAttribute('aria-label',item.dataset.dexDetail+' 도감 상세 보기')});
   const openDetail=item=>{
-    const name=item.dataset.dexDetail||canonical(item.querySelector('b')?.textContent?.trim()),recipe=recipes[name]||'조리법을 제공하지 않아요 · 식용 여부가 확인되지 않은 후보는 채취·섭취하지 마세요.',edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요'),search='https://search.naver.com/search.naver?query='+encodeURIComponent((name||'해양생물')+' 안전 조리법'),photo=item.querySelector('.album-photo img')?.src;
-    document.querySelector('#dexDetailName').textContent=name;document.querySelector('#dexDetailPhoto').src=photo||'';document.querySelector('#dexDetailPhoto').style.display=photo?'block':'none';document.querySelector('#dexDetailDescription').textContent=description(name);document.querySelector('#dexDetailRecipe').innerHTML='<h3>'+(edible?'추천 조리법':'안전 안내')+'</h3><p>'+escape(recipe)+'</p>'+(edible?'<a class="recipe-search" href="'+search+'" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>':'');detail.classList.add('show');
+    const name=item.dataset.dexDetail||canonical(item.querySelector('b')?.textContent?.trim()),recipe=recipes[name]||'조리법을 제공하지 않아요 · 식용 여부가 확인되지 않은 후보는 채취·섭취하지 마세요.',edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요'),search='https://search.naver.com/search.naver?query='+encodeURIComponent((name||'해양생물')+' 안전 조리법'),photo=item.querySelector('.album-photo img')?.src,rule=regulations[name]||['없음','없음'];
+    document.querySelector('#dexDetailName').textContent=name;document.querySelector('#dexDetailPhoto').src=photo||'';document.querySelector('#dexDetailPhoto').style.display=photo?'block':'none';document.querySelector('#dexDetailDescription').textContent=description(name);document.querySelector('#dexDetailRecipe').innerHTML='<div class="dex-reg-grid"><div><span>금지체장</span><b>'+escape(rule[0])+'</b></div><div><span>금어기</span><b>'+escape(rule[1])+'</b></div></div><h3>'+(edible?'추천 조리법':'안전 안내')+'</h3><p>'+escape(recipe)+'</p>'+(edible?'<a class="recipe-search" href="'+search+'" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>':'');detail.classList.add('show');
   };
   new MutationObserver(enrich).observe(list,{childList:true,subtree:true});enrich();
   document.querySelector('#dexDetailX').onclick=()=>detail.classList.remove('show');

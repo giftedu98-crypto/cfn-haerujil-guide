@@ -42,7 +42,7 @@
     '대수리':'삶아서 무침 · 식용 종을 정확히 확인하고 충분히 가열하세요.',
     '피뿔고둥':'삶아서 무침 · 내장을 제거하고 식용 종만 충분히 가열하세요.',
     '박하지':'된장국 또는 찜 · 살아 있거나 신선한 개체만 충분히 익히세요.',
-    '풀게':'탕 또는 찜 · 식용 종임을 확인하고 충분히 가열하세요.',
+    '풀게':'탕 또는 찜.',
     '민꽃게':'찜 또는 탕 · 살아 있거나 신선한 개체만 충분히 익히세요.',
     '털게':'찜 또는 탕 · 살아 있거나 신선한 개체만 충분히 익히세요.',
     '새우류':'소금구이 또는 탕 · 식용 종을 확인하고 중심부까지 익히세요.',
@@ -84,9 +84,7 @@
     const edible=Object.prototype.hasOwnProperty.call(recipes,name)&&!recipe.startsWith('조리법을 제공하지 않아요');
     const search=`https://search.naver.com/search.naver?query=${encodeURIComponent(`${name||'해양생물'} 안전 조리법`)}`;
     const parent=item.querySelector('.album-meta')||item.querySelector('div');if(!parent)return;
-    parent.insertAdjacentHTML('beforeend',`<p class="album-recipe"><span>🍳</span><span><b>${edible?'식용 확인 후 추천 조리':'안전 안내'}</b> ${escape(recipe)}</span></p>${edible?`<a class="recipe-search" href="${search}" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>`:''}`);
+    parent.insertAdjacentHTML('beforeend',`<p class="album-recipe"><span>🍳</span><span><b>${edible?'추천 조리법':'안전 안내'}</b> ${escape(recipe)}</span></p>${edible?`<a class="recipe-search" href="${search}" target="_blank" rel="noopener">인터넷 조리법 더 보기 ↗</a>`:''}`);
   });
   new MutationObserver(enrich).observe(list,{childList:true,subtree:true});enrich();
 })();
-
-

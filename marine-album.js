@@ -16,12 +16,12 @@
     const all=(await entries()).sort((a,b)=>b.savedAt-a.savedAt),groups=new Map();
     all.forEach(item=>{const name=normalizedName(item.name),group=groups.get(name)||{name,items:[]};group.items.push(item);groups.set(name,group)});
     const registered=[...groups.values()].filter(group=>catalogue.includes(group.name));
-    const entries=catalogue.map((name,index)=>{
+    const cards=catalogue.map((name,index)=>{
       const group=groups.get(name);if(!group)return '<article class="album-item dex-entry"><span class="dex-number">#'+String(index+1).padStart(2,'0')+'</span><div class="album-meta"><b>'+escape(name)+'</b><small>미등록</small></div></article>';
       const newest=group.items[0],count=group.items.length,ids=group.items.map(item=>item.id).join(','),photos=group.items.map((item,photoIndex)=>'<button type="button" class="album-photo" data-album-view="'+item.id+'" aria-label="'+escape(name)+' 사진 '+(photoIndex+1)+' 크게 보기"><img src="'+URL.createObjectURL(item.photo)+'" alt="'+escape(name)+' 사진 '+(photoIndex+1)+'"></button>').join('');
       return '<article class="album-item album-species dex-entry registered"><span class="dex-number">#'+String(index+1).padStart(2,'0')+'</span><div class="album-photos '+(count>1?'multiple':'')+'">'+photos+'</div><div class="album-meta"><b>'+escape(name)+'</b><small>등록 사진 '+count+'장</small><small>최근 '+new Date(newest.savedAt).toLocaleDateString('ko-KR')+'</small></div><button type="button" data-album-delete="'+ids+'" aria-label="'+escape(name)+' 사진 삭제">×</button></article>';
     }).join('');
-    list.innerHTML='<div class="dex-summary"><span>BUSAN MARINE DEX</span><b>'+registered.length+' / '+catalogue.length+'</b><small>사진 분석 후 도감에 등록하면 사진이 채워져요.</small></div><div class="dex-grid">'+entries+'</div>';
+    list.innerHTML='<div class="dex-summary"><span>BUSAN MARINE DEX</span><b>'+registered.length+' / '+catalogue.length+'</b><small>사진 분석 후 도감에 등록하면 사진이 채워져요.</small></div><div class="dex-grid">'+cards+'</div>';
   };
   const showPhoto=async id=>{const item=(await entries()).find(entry=>Number(entry.id)===Number(id));if(!item)return;document.querySelector('#albumPhotoName').textContent=normalizedName(item.name);document.querySelector('#albumPhotoFull').src=URL.createObjectURL(item.photo);viewer.classList.add('show')};
   const chooseDelete=async ids=>{

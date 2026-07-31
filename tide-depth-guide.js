@@ -5,7 +5,7 @@
   let selected='dadaepo';
   const header=document.querySelector('.single-head');
   if(!header)return;
-  header.insertAdjacentHTML('beforeend','<section class="tide-depth-guide" aria-live="polite"><div class="depth-figure" id="depthFigure"><i></i><svg viewBox="0 0 40 60" aria-hidden="true"><circle cx="20" cy="7" r="5"/><path d="M14 15h12l3 18h-7l-1 24h-3l-1-15-1 15h-3l-1-24H8z"/><path d="M14 17 7 30l3 2 6-10M26 17l7 13-3 2-6-10" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></div><div><p>현재 예상 수심 · <b id="depthPoint">다대포</b></p><strong id="depthValue">계산 중…</strong><small id="depthHint">성인 170cm 기준 체감 위치입니다.</small></div></section>');
+  header.insertAdjacentHTML('beforeend','<section class="tide-depth-guide" aria-live="polite"><div class="depth-figure" id="depthFigure"><i></i><svg viewBox="0 0 40 60" aria-hidden="true"><circle cx="20" cy="7" r="5" fill="currentColor"/><rect x="14" y="14" width="12" height="21" rx="6" fill="currentColor"/><path d="M14 18 7 29M26 18l7 11M17 34l-3 22M23 34l3 22" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><p>현재 예상 수심 · <b id="depthPoint">다대포</b></p><strong id="depthValue">계산 중…</strong><small id="depthHint">성인 170cm 기준 체감 위치입니다.</small></div></section>');
   const value=document.querySelector('#depthValue'),hint=document.querySelector('#depthHint'),pointName=document.querySelector('#depthPoint'),figure=document.querySelector('#depthFigure');
   const minutes=time=>{const [hour,minute]=time.split(':').map(Number);return hour*60+minute;};
   const update=()=>{
@@ -27,4 +27,3 @@
   },true);
   update();setInterval(update,60000);
 })();
-

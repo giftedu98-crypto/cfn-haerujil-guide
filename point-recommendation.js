@@ -11,7 +11,8 @@
     const data=judgement();
     Object.entries(labels).forEach(([id,name])=>{
       const marker=[...document.querySelectorAll('.cfn-map-marker')].find(el=>el.getAttribute('aria-label')===`${name} 포인트 열기`);if(!marker)return;
-      marker.classList.remove('point-good','point-caution','point-risk');marker.classList.add(`point-${data[id][0]==='추천'?'good':data[id][0]==='주의'?'caution':'risk'}`);marker.querySelector('.point-name').dataset.judgement=data[id][0];
+      const level=data[id][0],tone=level==='추천'?'good':level==='주의'?'caution':'risk',color=tone==='good'?'#159a63':tone==='caution'?'#ef8b20':'#d63d39';
+      marker.classList.remove('point-good','point-caution','point-risk');marker.classList.add(`point-${tone}`);marker.dataset.recommendation=tone;marker.querySelector('.point-name').dataset.judgement=level;marker.querySelector('.real-pin').style.setProperty('background-color',color,'important');marker.querySelector('.real-pin').style.setProperty('box-shadow','0 0 0 3px #ffffff, 0 3px 10px '+color+'99','important');
     });
   };
   const enrichSheet=()=>{
